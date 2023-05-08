@@ -6,6 +6,7 @@ import { auth, db } from '../../firebase/config';
 function useCreateUser() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
 	const navigate = useNavigate();
 
 	const handleSubmit = (e) => {
@@ -27,11 +28,11 @@ function useCreateUser() {
 				navigate('/login');
 			})
 			.catch((error) => {
-				console.log(error.message);
+				setError(error.message);
 			});
 	};
 
-	return { email, setEmail, password, setPassword, handleSubmit };
+	return { email, setEmail, password, setPassword, handleSubmit, error };
 }
 
 export default useCreateUser;

@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from '../../firebase';
-import { auth, db } from '../../firebase/config';
+import { auth } from '../../firebase/config';
+import Cookies from '../../components/cookies';
 
 function useLoginUser() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
 	const navigate = useNavigate();
 
 	const handleLogin = (e) => {
@@ -15,14 +17,16 @@ function useLoginUser() {
 			.then((userCredential) => {
 				const user = userCredential.user;
 				console.log(user);
-				console.log('Logged in!');
+
+				Cookies.set('cookie-user-token', user.accessToken);
+				navigate('/home');
 			})
 			.catch((error) => {
-				console.log(error.message);
+				setError(error.message);
 			});
 	};
 
-	return { handleLogin, setEmail, setPassword };
+	return { handleLogin, setEmail, setPassword, error };
 }
 
 export default useLoginUser;

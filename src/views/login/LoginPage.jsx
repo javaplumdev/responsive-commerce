@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import useLoginUser from './useLoginUser';
+import { Alert } from 'react-bootstrap';
 
 const LoginPage = () => {
-	const { setEmail, setPassword, handleLogin } = useLoginUser();
+	const { setEmail, setPassword, handleLogin, error } = useLoginUser();
 
 	return (
 		<div>
-			LoginPage
 			<div>
+				{error && <Alert variant="danger">{error}</Alert>}
 				<form onSubmit={handleLogin}>
 					<input
 						type="email"

@@ -20,10 +20,10 @@ function useCreateUser() {
 					email: email,
 					password: password,
 					createdAt: new Date(),
-					uid: user.uid,
+					uid: user?.uid,
 				};
 
-				const userRef = doc(db, 'users', user.uid);
+				const userRef = doc(db, 'users', user?.uid);
 				setDoc(userRef, userData);
 				navigate('/login');
 			})

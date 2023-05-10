@@ -2,10 +2,21 @@ import React, { useContext } from 'react';
 import { Badge, Button, Offcanvas, OffcanvasBody } from 'react-bootstrap';
 import { BsCart } from 'react-icons/bs';
 import { ProductContextProvider } from '../../context/ProductContext';
+import { BsXCircle } from 'react-icons/bs';
 
 const CartComponent = () => {
-	const { handleShowCartCanvas, handleCloseCartCanvas, showCartCanvas } =
-		useContext(ProductContextProvider);
+	const {
+		handleShowCartCanvas,
+		handleCloseCartCanvas,
+		decreaseItemQty,
+		increaseItemQty,
+		showCartCanvas,
+		removeItem,
+		cart,
+		user,
+	} = useContext(ProductContextProvider);
+
+	const fileredCart = cart && cart?.filter((item) => item.owner === user?.uid);
 
 	return (
 		<React.Fragment>
@@ -16,7 +27,7 @@ const CartComponent = () => {
 			>
 				<BsCart size="1.5em" />{' '}
 				<Badge bg="danger" className="rounded-circle">
-					0
+					{fileredCart?.length}
 				</Badge>
 			</Button>
 			<Offcanvas
@@ -25,7 +36,71 @@ const CartComponent = () => {
 				placement="end"
 			>
 				<Offcanvas.Header closeButton>Cart</Offcanvas.Header>
-				<OffcanvasBody>Hatdog</OffcanvasBody>
+				<OffcanvasBody>
+					{fileredCart.length === 0 ? (
+						<p>No length</p>
+					) : (
+						<div>
+							{fileredCart.map((item) => {
+								return (
+									<div key={item.id} className="cart-items mt-2">
+										<div className="mb-1 d-flex justify-content-between">
+											<div>
+												<h5>{item.name}</h5>
+												<p>
+													Item total price: <b>₱{item.totalItemPrice}</b>
+												</p>
+											</div>
+											<p className="fw-bolder fs-5">₱{item.price}</p>
+										</div>
+										<div className="d-flex justify-content-between align-items-center mb-3">
+											<div className="d-flex ">
+												<Button
+													variant="outline-dark"
+													className="px-3"
+													onClick={() =>
+														increaseItemQty(item.cartId, item.qty, item.price)
+													}
+												>
+													+
+												</Button>
+
+												<h5 className="px-3">{item.qty}</h5>
+
+												<Button
+													variant="outline-dark"
+													className="px-3"
+													onClick={() =>
+														decreaseItemQty(item.cartId, item.qty, item.price)
+													}
+												>
+													-
+												</Button>
+											</div>
+
+											<BsXCircle
+												onClick={() => removeItem(item.cartId)}
+												className="BsXCircle text-danger"
+												size="1.4em"
+											/>
+										</div>
+										<hr></hr>
+									</div>
+								);
+							})}
+						</div>
+					)}
+					<br></br>
+					<div
+						className="sub-total w-100 d-flex align-items-center justify-content-between"
+						style={{ height: '75px' }}
+					>
+						<div className="d-flex">Sub total: 0</div>
+						<div className="me-4">
+							<Button>Buy</Button>
+						</div>
+					</div>
+				</OffcanvasBody>
 			</Offcanvas>
 		</React.Fragment>
 	);

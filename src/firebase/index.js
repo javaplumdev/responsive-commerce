@@ -9,15 +9,23 @@ import {
 	setDoc,
 	onSnapshot,
 	collection,
+	serverTimestamp,
+	query,
+	orderBy,
+	deleteDoc,
 } from 'firebase/firestore';
 
 export {
+	deleteDoc,
 	signOut,
 	signInWithEmailAndPassword,
 	createUserWithEmailAndPassword,
+	serverTimestamp,
 	getFirestore,
 	onSnapshot,
 	doc,
 	setDoc,
 	collection,
+	query,
+	orderBy,
 };

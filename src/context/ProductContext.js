@@ -1,33 +1,121 @@
-import React, { createContext, useState } from 'react';
-import useGetItems from '../views/home/useGetItems';
+import React, { createContext, useEffect, useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, db } from '../firebase/config';
+import {
+	setDoc,
+	doc,
+	onSnapshot,
+	collection,
+	serverTimestamp,
+	query,
+	orderBy,
+	deleteDoc,
+} from '../firebase';
+import { toast } from 'react-toastify';
 
 export const ProductContextProvider = createContext();
 
 export function ProductParentContext({ children }) {
-	const { data: marketData } = useGetItems();
-
 	const [showCartCanvas, setShowCartCanvas] = useState(false);
-	const [data, setData] = useState(marketData);
+	const [cart, setCart] = useState([]);
+	const [user] = useAuthState(auth);
+	const [itemQuantity, setItemQuantity] = useState(0);
+
+	useEffect(() => {
+		const queryData = query(
+			collection(db, 'cart'),
+			orderBy('timestamp', 'desc')
+		);
+
+		onSnapshot(queryData, (snapshot) => {
+			setCart(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+		});
+	}, []);
 
 	const handleShowCartCanvas = () => setShowCartCanvas(true);
 	const handleCloseCartCanvas = () => setShowCartCanvas(false);
 
-	function increaseItemQty(id) {
-		console.log(id);
-	}
+	const increaseItemQty = async (id, qty, price) => {
+		let itemQty = qty + 1;
 
-	function decreaseItemQty(id) {
-		console.log(id);
-	}
+		await setDoc(
+			doc(db, 'cart', id),
+			{ qty: itemQty, totalItemPrice: price * itemQty },
+			{ merge: true }
+		);
+	};
+
+	const decreaseItemQty = async (id, qty, price) => {
+		let itemQty = qty - 1;
+
+		await setDoc(
+			doc(db, 'cart', id),
+			{
+				qty: qty <= 2 ? 1 : itemQty,
+				totalItemPrice: qty <= 2 ? price : price * itemQty,
+			},
+			{ merge: true }
+		);
+	};
+
+	const removeItem = async (id) => {
+		await deleteDoc(doc(db, 'cart', id));
+	};
+
+	const addToCart = async (data) => {
+		const { name, price, id: productId } = data;
+		const { uid } = user || {};
+
+		const itemExist = cart.find((item) => item.cartId === productId + uid);
+
+		if (itemExist) {
+			toast.error('Item is already added!', {
+				position: 'top-center',
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: 'light',
+			});
+		} else {
+			toast.success('Item added to cart!', {
+				position: 'top-center',
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: 'light',
+			});
+
+			await setDoc(doc(db, 'cart', productId + uid), {
+				cartId: productId + uid,
+				id: productId,
+				name: name,
+				price: price,
+				qty: 1,
+				owner: uid,
+				timestamp: serverTimestamp(),
+				totalItemPrice: price,
+			});
+		}
+	};
 
 	return (
 		<ProductContextProvider.Provider
 			value={{
+				user,
+				cart,
+				addToCart,
+				removeItem,
+				showCartCanvas,
 				increaseItemQty,
 				decreaseItemQty,
 				handleShowCartCanvas,
 				handleCloseCartCanvas,
-				showCartCanvas,
 			}}
 		>
 			{children}

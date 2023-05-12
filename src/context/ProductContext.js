@@ -10,6 +10,7 @@ import {
 	query,
 	orderBy,
 	deleteDoc,
+	onAuthStateChanged,
 } from '../firebase';
 import { toast } from 'react-toastify';
 
@@ -19,7 +20,8 @@ export function ProductParentContext({ children }) {
 	const [showCartCanvas, setShowCartCanvas] = useState(false);
 	const [cart, setCart] = useState([]);
 	const [user] = useAuthState(auth);
-	const [itemQuantity, setItemQuantity] = useState(0);
+	const [grandTotal, setGrandTotal] = useState(0);
+	const [currentUser, setCurrentUser] = useState(null);
 
 	useEffect(() => {
 		const queryData = query(
@@ -30,12 +32,26 @@ export function ProductParentContext({ children }) {
 		onSnapshot(queryData, (snapshot) => {
 			setCart(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
 		});
+
+		onSnapshot(collection(db, 'cart-sub-total'), (snapshot) => {
+			setGrandTotal(
+				snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+			);
+		});
+	}, []);
+
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
+			setCurrentUser(user);
+		});
+
+		return () => unsubscribe();
 	}, []);
 
 	const handleShowCartCanvas = () => setShowCartCanvas(true);
 	const handleCloseCartCanvas = () => setShowCartCanvas(false);
 
-	const increaseItemQty = async (id, qty, price) => {
+	const increaseItemQty = async (id, qty, price, totalItemPrice) => {
 		let itemQty = qty + 1;
 
 		await setDoc(
@@ -43,9 +59,15 @@ export function ProductParentContext({ children }) {
 			{ qty: itemQty, totalItemPrice: price * itemQty },
 			{ merge: true }
 		);
+
+		await setDoc(
+			doc(db, 'cart-sub-total', id),
+			{ subTotal: totalItemPrice + price },
+			{ merge: true }
+		);
 	};
 
-	const decreaseItemQty = async (id, qty, price) => {
+	const decreaseItemQty = async (id, qty, price, totalItemPrice) => {
 		let itemQty = qty - 1;
 
 		await setDoc(
@@ -54,6 +76,12 @@ export function ProductParentContext({ children }) {
 				qty: qty <= 2 ? 1 : itemQty,
 				totalItemPrice: qty <= 2 ? price : price * itemQty,
 			},
+			{ merge: true }
+		);
+
+		await setDoc(
+			doc(db, 'cart-sub-total', id),
+			{ subTotal: qty <= 2 ? price : totalItemPrice - price },
 			{ merge: true }
 		);
 	};
@@ -101,6 +129,12 @@ export function ProductParentContext({ children }) {
 				timestamp: serverTimestamp(),
 				totalItemPrice: price,
 			});
+
+			await setDoc(
+				doc(db, 'cart-sub-total', productId + uid),
+				{ subTotal: price, owner: uid },
+				{ merge: true }
+			);
 		}
 	};
 
@@ -111,6 +145,8 @@ export function ProductParentContext({ children }) {
 				cart,
 				addToCart,
 				removeItem,
+				grandTotal,
+				currentUser,
 				showCartCanvas,
 				increaseItemQty,
 				decreaseItemQty,

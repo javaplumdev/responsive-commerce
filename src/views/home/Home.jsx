@@ -16,7 +16,7 @@ const Home = () => {
 						<div
 							key={index}
 							className="text-decoration-none m-2"
-							style={{ maxWidth: '200px' }}
+							style={{ maxWidth: '300px' }}
 						>
 							<Link to={`/product/${item.id}`}>
 								<img
@@ -46,7 +46,7 @@ const Home = () => {
 			</div>
 			<div className="mt-5">
 				{isLoading ? (
-					<div className="justify-content-center d-flex align-items-center">
+					<div>
 						<Spinner animation="border" role="status">
 							<span className="visually-hidden">Loading...</span>
 						</Spinner>

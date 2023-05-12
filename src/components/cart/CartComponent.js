@@ -11,12 +11,24 @@ const CartComponent = () => {
 		decreaseItemQty,
 		increaseItemQty,
 		showCartCanvas,
+		currentUser,
+		grandTotal,
 		removeItem,
 		cart,
 		user,
 	} = useContext(ProductContextProvider);
 
 	const fileredCart = cart && cart?.filter((item) => item.owner === user?.uid);
+	const filteredTotal =
+		cart && cart?.filter((item) => item.owner === currentUser.uid);
+
+	console.log(filteredTotal);
+
+	const sum = filteredTotal.reduce((accumulator, currentObject) => {
+		return accumulator + currentObject.totalItemPrice;
+	}, 0);
+
+	console.log(sum);
 
 	return (
 		<React.Fragment>
@@ -59,7 +71,12 @@ const CartComponent = () => {
 													variant="outline-dark"
 													className="px-3"
 													onClick={() =>
-														increaseItemQty(item.cartId, item.qty, item.price)
+														increaseItemQty(
+															item.cartId,
+															item.qty,
+															item.price,
+															item.totalItemPrice
+														)
 													}
 												>
 													+
@@ -71,7 +88,12 @@ const CartComponent = () => {
 													variant="outline-dark"
 													className="px-3"
 													onClick={() =>
-														decreaseItemQty(item.cartId, item.qty, item.price)
+														decreaseItemQty(
+															item.cartId,
+															item.qty,
+															item.price,
+															item.totalItemPrice
+														)
 													}
 												>
 													-
@@ -95,7 +117,7 @@ const CartComponent = () => {
 						className="sub-total w-100 d-flex align-items-center justify-content-between"
 						style={{ height: '75px' }}
 					>
-						<div className="d-flex">Sub total: 0</div>
+						<div className="d-flex">Sub total: {sum}</div>
 						<div className="me-4">
 							<Button>Buy</Button>
 						</div>

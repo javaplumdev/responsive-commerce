@@ -2,6 +2,7 @@ import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signOut,
+	onAuthStateChanged,
 } from 'firebase/auth';
 import {
 	getFirestore,
@@ -19,6 +20,7 @@ export {
 	deleteDoc,
 	signOut,
 	signInWithEmailAndPassword,
+	onAuthStateChanged,
 	createUserWithEmailAndPassword,
 	serverTimestamp,
 	getFirestore,

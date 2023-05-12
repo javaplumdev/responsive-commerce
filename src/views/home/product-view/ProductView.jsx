@@ -63,7 +63,7 @@ const ProductView = () => {
 											<img
 												src={SAMPLE_DATA_PICTURE}
 												className="w-100"
-												style={{ height: '170px', objectFit: 'cover' }}
+												style={{ height: '200px', objectFit: 'cover' }}
 											/>
 											<div>
 												{name}

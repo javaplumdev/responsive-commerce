@@ -14,15 +14,15 @@ const ProductView = () => {
 	const { data, isLoading } = useGetItems();
 
 	const product = data && data?.find((item) => item.id === id);
-	const { name, price, id: productId } = product;
+	const { name, price, id: productId, image } = product || {};
 
 	function ProductViewComponent() {
 		return (
 			<React.Fragment>
 				<div className="d-flex flex-wrap mt-3">
-					<div style={{ maxWidth: '500px' }} className="me-3">
+					<div style={{ maxWidth: '525px' }} className="me-3">
 						<img
-							src={SAMPLE_DATA_PICTURE}
+							src={image}
 							style={{
 								width: '100%',
 								height: '300px',
@@ -30,7 +30,7 @@ const ProductView = () => {
 							}}
 						/>
 					</div>
-					<div style={{ width: '300px' }}>
+					<div className="mx-3 mt-3">
 						<h4>{name}</h4>
 						<p className="fw-bold">₱{price}</p>
 						<p>This is sample description</p>
@@ -58,12 +58,20 @@ const ProductView = () => {
 										<Link
 											key={item.id}
 											to={`/product/${item.id}`}
-											className="text-decoration-none text-dark me-2"
+											className="text-decoration-none text-dark m-2"
+											style={{
+												width: '255px',
+												height: '250px',
+											}}
 										>
 											<img
-												src={SAMPLE_DATA_PICTURE}
+												src={item.image}
 												className="w-100"
-												style={{ height: '200px', objectFit: 'cover' }}
+												style={{
+													width: '100%',
+													height: '200px',
+													objectFit: 'cover',
+												}}
 											/>
 											<div>
 												{name}

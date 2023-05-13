@@ -20,9 +20,13 @@ const Home = () => {
 						>
 							<Link to={`/product/${item.id}`}>
 								<img
-									src={SAMPLE_DATA_PICTURE}
-									alt={SAMPLE_DATA_PICTURE}
-									style={{ width: '100%', objectFit: 'cover' }}
+									src={item.image}
+									alt={item.image}
+									style={{
+										width: '255px',
+										height: '200px',
+										objectFit: 'cover',
+									}}
 								/>
 							</Link>
 

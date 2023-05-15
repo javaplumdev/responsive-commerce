@@ -123,16 +123,16 @@ export function ProductParentContext({ children }) {
 				cartId: productId + uid,
 				id: productId,
 				name: name,
-				price: price,
+				price: parseInt(price),
 				qty: 1,
 				owner: uid,
 				timestamp: serverTimestamp(),
-				totalItemPrice: price,
+				totalItemPrice: parseInt(price),
 			});
 
 			await setDoc(
 				doc(db, 'cart-sub-total', productId + uid),
-				{ subTotal: price, owner: uid },
+				{ subTotal: parseInt(price), owner: uid },
 				{ merge: true }
 			);
 		}

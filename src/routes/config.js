@@ -1,8 +1,17 @@
-import { LoginPage, RegisterPage, Home, ProductView } from '../views';
+import { LoginPage, RegisterPage, Home, ProductView, Checkout } from '../views';
 import { NavbarComponent } from '../components';
 import ProtectedRoute from '../components/protectedRoute';
 
 export const route_config = [
+	{
+		path: '/checkout',
+		component: (
+			<ProtectedRoute>
+				<NavbarComponent />
+				<Checkout />
+			</ProtectedRoute>
+		),
+	},
 	{
 		path: '/product/:id',
 		component: (

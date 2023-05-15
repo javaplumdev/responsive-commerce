@@ -24,7 +24,7 @@ const ProductView = () => {
 						<img
 							src={image}
 							style={{
-								width: '100%',
+								width: '525px',
 								height: '300px',
 								objectFit: 'cover',
 							}}

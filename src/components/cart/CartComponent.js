@@ -3,6 +3,7 @@ import { Badge, Button, Offcanvas, OffcanvasBody } from 'react-bootstrap';
 import { BsCart } from 'react-icons/bs';
 import { ProductContextProvider } from '../../context/ProductContext';
 import { BsXCircle } from 'react-icons/bs';
+import useBuyItems from '../../views/checkout/useBuyItems';
 
 const CartComponent = () => {
 	const {
@@ -17,6 +18,7 @@ const CartComponent = () => {
 		cart,
 		user,
 	} = useContext(ProductContextProvider);
+	const { buyItems } = useBuyItems();
 
 	const fileredCart = cart && cart?.filter((item) => item.owner === user?.uid);
 	const filteredTotal =
@@ -119,7 +121,7 @@ const CartComponent = () => {
 					>
 						<div className="d-flex">Sub total: {sum}</div>
 						<div className="me-4">
-							<Button>Buy</Button>
+							<Button onClick={() => buyItems(fileredCart, sum)}>Buy</Button>
 						</div>
 					</div>
 				</OffcanvasBody>

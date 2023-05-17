@@ -117,18 +117,21 @@ const CartComponent = () => {
 									</div>
 								);
 							})}
+
+							<br></br>
+							<div
+								className="sub-total w-100 d-flex align-items-center justify-content-between"
+								style={{ height: '75px' }}
+							>
+								<div className="d-flex">Sub total: {sum}</div>
+								<div className="me-4">
+									<Button onClick={() => buyItems(fileredCart, sum)}>
+										Buy
+									</Button>
+								</div>
+							</div>
 						</div>
 					)}
-					<br></br>
-					<div
-						className="sub-total w-100 d-flex align-items-center justify-content-between"
-						style={{ height: '75px' }}
-					>
-						<div className="d-flex">Sub total: {sum}</div>
-						<div className="me-4">
-							<Button onClick={() => buyItems(fileredCart, sum)}>Buy</Button>
-						</div>
-					</div>
 				</OffcanvasBody>
 			</Offcanvas>
 		</React.Fragment>

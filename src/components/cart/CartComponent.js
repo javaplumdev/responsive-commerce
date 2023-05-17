@@ -52,7 +52,12 @@ const CartComponent = () => {
 				<Offcanvas.Header closeButton>Cart</Offcanvas.Header>
 				<OffcanvasBody>
 					{fileredCart.length === 0 ? (
-						<p>No length</p>
+						<div
+							className="d-flex align-items-center justify-content-center"
+							style={{ height: '50vh' }}
+						>
+							<h3>Empty cart</h3>
+						</div>
 					) : (
 						<div>
 							{fileredCart.map((item) => {

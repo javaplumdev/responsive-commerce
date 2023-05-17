@@ -3,14 +3,13 @@ import { Container, Table, Button } from 'react-bootstrap';
 import useBuyItems from './useBuyItems';
 
 const Checkout = () => {
-	const { data, currentUser } = useBuyItems();
+	const { data, currentUser, placeOrder } = useBuyItems();
 
 	const filteredData =
 		data && data?.filter((item) => item.owner === currentUser.uid);
 
 	let checkoutData = filteredData && filteredData[0]?.items;
-
-	console.log(filteredData);
+	let checkOutPending = filteredData?.find((item) => item?.id)?.id;
 
 	return (
 		<Container>
@@ -28,9 +27,9 @@ const Checkout = () => {
 						<tr>No data</tr>
 					) : (
 						checkoutData &&
-						checkoutData?.map((item) => {
+						checkoutData?.map((item, index) => {
 							return (
-								<tr>
+								<tr key={index}>
 									<td>{item.name}</td>
 									<td>{item.qty}</td>
 									<td>₱{item.price}</td>
@@ -45,7 +44,14 @@ const Checkout = () => {
 					<p>Order Total ({checkoutData?.length} item):</p>
 					<h3 className="mx-3">{filteredData && filteredData[0]?.sum}</h3>
 				</div>
-				<Button variant="primary">Place order</Button>
+				<Button
+					variant="primary"
+					onClick={() =>
+						placeOrder(checkoutData, filteredData[0]?.sum, checkOutPending)
+					}
+				>
+					Place order
+				</Button>
 			</div>
 		</Container>
 	);

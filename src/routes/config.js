@@ -7,11 +7,21 @@ import {
 	Profile,
 	About,
 	Contact,
+	Order,
 } from '../views';
 import { NavbarComponent, Footer } from '../components';
 import ProtectedRoute from '../components/protectedRoute';
 
 export const route_config = [
+	{
+		path: '/order',
+		component: (
+			<ProtectedRoute>
+				<NavbarComponent />
+				<Order />
+			</ProtectedRoute>
+		),
+	},
 	{
 		path: '/contact',
 		component: (

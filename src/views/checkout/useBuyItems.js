@@ -6,6 +6,7 @@ import {
 	onSnapshot,
 	collection,
 	deleteDoc,
+	serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { v4 as uuidv4 } from 'uuid';
@@ -41,6 +42,7 @@ function useBuyItems() {
 					sum: sum,
 					owner: currentUser.uid,
 					isApproved: false,
+					timestamp: serverTimestamp(),
 					sum: parseInt(sum),
 				},
 				{ merge: true }
@@ -54,7 +56,9 @@ function useBuyItems() {
 				sum: sum,
 				owner: currentUser.uid,
 				isApproved: false,
+				timestamp: serverTimestamp(),
 				sum: sum,
+				status: 'Pending',
 			});
 		}
 
@@ -70,8 +74,10 @@ function useBuyItems() {
 			items: data,
 			sum: sum,
 			owner: currentUser.uid,
+			timestamp: serverTimestamp(),
 			isApproved: false,
 			sum: sum,
+			status: 'Pending',
 		});
 
 		await deleteDoc(doc(db, 'checkout-pending', checkoutId));

@@ -6,3 +6,4 @@ export { default as Checkout } from './checkout/Checkout';
 export { default as Profile } from './profile/Profile';
 export { default as About } from './about/About';
 export { default as Contact } from './contacts/Contact';
+export { default as Order } from './orders/Order';

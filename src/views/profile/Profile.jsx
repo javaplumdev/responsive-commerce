@@ -13,6 +13,14 @@ const Profile = () => {
 		checkoutPending &&
 		checkoutPending?.filter((item) => item.owner === currentUser?.uid);
 
+	const approvedOrder =
+		userPlacedOrder &&
+		userPlacedOrder?.filter((item) => item.status === 'Approved');
+
+	const toShipOrder =
+		userPlacedOrder &&
+		userPlacedOrder?.filter((item) => item.status === 'To ship');
+
 	return (
 		<Container>
 			<h3>Profile</h3>
@@ -29,12 +37,12 @@ const Profile = () => {
 					<div>
 						<AiFillCheckCircle size={30} />
 						<span>Approved Order</span>
-						<p className="text-center fs-1">0</p>
+						<p className="text-center fs-1">{approvedOrder?.length}</p>
 					</div>
 					<div>
 						<MdOutlineLocalShipping size={30} />
 						<span>To ship Order</span>
-						<p className="text-center fs-1">0</p>
+						<p className="text-center fs-1">{toShipOrder?.length}</p>
 					</div>
 				</div>
 			</div>

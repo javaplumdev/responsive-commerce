@@ -5,11 +5,31 @@ import {
 	ProductView,
 	Checkout,
 	Profile,
+	About,
+	Contact,
 } from '../views';
-import { NavbarComponent } from '../components';
+import { NavbarComponent, Footer } from '../components';
 import ProtectedRoute from '../components/protectedRoute';
 
 export const route_config = [
+	{
+		path: '/contact',
+		component: (
+			<ProtectedRoute>
+				<NavbarComponent />
+				<Contact />
+			</ProtectedRoute>
+		),
+	},
+	{
+		path: '/about',
+		component: (
+			<ProtectedRoute>
+				<NavbarComponent />
+				<About />
+			</ProtectedRoute>
+		),
+	},
 	{
 		path: '/profile/:id',
 		component: (

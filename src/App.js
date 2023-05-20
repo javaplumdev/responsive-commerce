@@ -4,11 +4,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ContextProvider from './ContextProvider';
 import { Toast } from './components';
 import './styles/index.css';
+import ReactHelmet from './components/helmet/ReactHelmet';
 
 const App = () => {
 	return (
 		<div>
 			<ContextProvider>
+				<ReactHelmet />
 				<Router>
 					<Toast />
 					<Routes>

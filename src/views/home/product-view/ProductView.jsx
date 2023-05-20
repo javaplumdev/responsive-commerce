@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { ProductContextProvider } from '../../../context/ProductContext';
 import { useParams } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import { CartComponent } from '../../../components';
-import { SAMPLE_DATA_PICTURE } from '../../../config/imageData';
+import { CartComponent, Footer } from '../../../components';
 import useGetItems from '../../home/useGetItems';
 import { Button, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import CarouselComponent from '../CarouselComponent';
 
 const ProductView = () => {
 	const { addToCart } = useContext(ProductContextProvider);
@@ -14,7 +14,7 @@ const ProductView = () => {
 	const { data, isLoading } = useGetItems();
 
 	const product = data && data?.find((item) => item.id === id);
-	const { name, price, id: productId, image } = product || {};
+	const { name, price, id: productId, image, description } = product || {};
 
 	function ProductViewComponent() {
 		return (
@@ -33,7 +33,7 @@ const ProductView = () => {
 					<div className="mx-3 mt-3">
 						<h4>{name}</h4>
 						<p className="fw-bold">₱{price}</p>
-						<p>This is sample description</p>
+						<p>{description}</p>
 						<Button
 							className="me-3"
 							variant="outline-dark"
@@ -58,7 +58,7 @@ const ProductView = () => {
 										<Link
 											key={item.id}
 											to={`/product/${item.id}`}
-											className="text-decoration-none text-dark m-2"
+											className="text-decoration-none text-dark m-2 my-5"
 											style={{
 												width: '255px',
 												height: '250px',
@@ -78,6 +78,17 @@ const ProductView = () => {
 												<br></br>
 												<b>₱{price}</b>
 											</div>
+											<Button
+												className="me-3"
+												variant="dark"
+												onClick={() => {
+													const product =
+														data && data?.find((data) => data.id === item.id);
+													addToCart(product);
+												}}
+											>
+												Add to cart
+											</Button>
 										</Link>
 									);
 								}
@@ -90,8 +101,8 @@ const ProductView = () => {
 
 	return (
 		<Container>
-			<div className="d-flex justify-content-between align-items-center">
-				<p>ProductView</p> <CartComponent />
+			<div className="d-flex justify-content-end align-items-center">
+				<CartComponent />
 			</div>
 			{isLoading ? (
 				<div className="justify-content-center d-flex align-items-center">
@@ -100,7 +111,13 @@ const ProductView = () => {
 					</Spinner>
 				</div>
 			) : (
-				<ProductViewComponent />
+				<>
+					<ProductViewComponent />
+					<CarouselComponent />
+					<div style={{ marginTop: '15em' }}>
+						<Footer />
+					</div>
+				</>
 			)}
 		</Container>
 	);
